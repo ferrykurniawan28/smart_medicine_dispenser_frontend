@@ -3,10 +3,12 @@ import 'package:smart_dispencer/routes/pages_name.dart';
 
 class SplashController extends GetxController {
   @override
-  void onReady() {
-    super.onReady();
-    Future.delayed(const Duration(seconds: 2), () {
-      // Get.offNamed(PagesName.home);
+  void onInit() {
+    Future.delayed(const Duration(seconds: 3), () {
+      Get.toNamed(PagesName.auth);
+      // destroy controller
+      Get.delete<SplashController>();
     });
+    super.onInit();
   }
 }

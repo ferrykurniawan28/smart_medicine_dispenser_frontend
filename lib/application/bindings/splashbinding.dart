@@ -4,6 +4,7 @@ import 'package:smart_dispencer/presentation/initial/controller/splashcontroller
 class SplashBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SplashController>(() => SplashController());
+    // Get.lazyPut<SplashController>(() => SplashController());
+    Get.put(SplashController());
   }
 }
