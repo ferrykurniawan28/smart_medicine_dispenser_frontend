@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_dispencer/presentation/colorpalette.dart';
+import 'package:smart_dispencer/routes/pages_name.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 
 class Auth extends StatelessWidget {
@@ -7,7 +11,11 @@ class Auth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // check if device is android or ios
+    bool isAndroid = Platform.isAndroid;
+
     return Scaffold(
+        // backgroundColor: BrightnessMode.secondary,
         body: ListView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -16,7 +24,11 @@ class Auth extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           height: Get.height * 0.7,
           decoration: const BoxDecoration(
-            color: Colors.grey, //TODO: change color
+            // color: BrightnessMode.primary, //TODO: change color
+            gradient: LinearGradient(colors: [
+              BrightnessMode.primary,
+              BrightnessMode.secondary,
+            ], begin: Alignment.topLeft, end: Alignment.bottomRight),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(50),
               bottomRight: Radius.circular(50),
@@ -26,7 +38,7 @@ class Auth extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Pill Reminder',
+                'MINDER',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -50,16 +62,18 @@ class Auth extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              SocialLoginButton(
-                buttonType: SocialLoginButtonType.apple,
-                onPressed: () {},
-              ),
-              const SizedBox(
-                height: 10,
-              ),
+              if (!isAndroid)
+                SocialLoginButton(
+                  buttonType: SocialLoginButtonType.apple,
+                  onPressed: () {},
+                ),
+              if (!isAndroid)
+                const SizedBox(
+                  height: 10,
+                ),
               SocialLoginButton(
                 buttonType: SocialLoginButtonType.generalLogin,
-                onPressed: () {},
+                onPressed: () => Get.toNamed(PagesName.login),
               ),
             ],
           ),
@@ -81,7 +95,7 @@ class Auth extends StatelessWidget {
                 height: 10,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () => Get.toNamed(PagesName.register),
                 // style: ElevatedButton.styleFrom(
                 //   textStyle: const TextStyle(
                 //     fontSize: 20,

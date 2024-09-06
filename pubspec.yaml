@@ -14,6 +14,9 @@ dependencies:
   flutter_fortune_wheel: ^1.3.1
   fortune_wheel_enhanced: ^0.0.4
   get: ^4.6.6
+  google_fonts: ^6.2.1
+  http: ^1.2.2
+  shared_preferences: ^2.3.2
   social_login_buttons: ^1.0.7
 
 dev_dependencies:
