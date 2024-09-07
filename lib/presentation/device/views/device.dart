@@ -10,34 +10,42 @@ class Device extends GetView<Devicecontroller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Device'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Device'),
+      // ),
       body: Container(
+        padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
-            // color: BrightnessMode.primary,
-            // gradient: LinearGradient(
-            //   colors: [
-            //     BrightnessMode.primary,
-            //     BrightnessMode.tertiary1,
-            //     BrightnessMode.tertiary3,
-            //     BrightnessMode.secondary,
-            //     BrightnessMode.tertiary2,
-            //   ],
-            //   begin: Alignment.topLeft,
-            //   end: Alignment.bottomRight,
-            // ),
-            ),
+          // color: BrightnessMode.primary,
+          gradient: LinearGradient(
+            colors: [
+              BrightnessMode.secondary,
+              BrightnessMode.primary,
+              // BrightnessMode.tertiary1,
+              // BrightnessMode.tertiary3,
+              // BrightnessMode.tertiary2,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: ListView(
           children: [
+            Text(
+              'Device',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+              ),
+            ),
             SizedBox(
               height: 400,
               child: FortuneWheel(
-                styleStrategy: UniformStyleStrategy(
-                  borderColor: Colors.black,
-                  borderWidth: 2,
-                  color: Colors.accents[10],
-                ),
+                // styleStrategy: UniformStyleStrategy(
+                //   borderColor: Colors.black,
+                //   borderWidth: 2,
+                //   color: Colors.accents[10],
+                // ),
                 animateFirst: false,
                 curve: Curves.easeIn,
                 rotationCount: 1,
@@ -56,6 +64,10 @@ class Device extends GetView<Devicecontroller> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Text('Container ${i + 1}'),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Container(
                               width: 50,
                               height: 50,
@@ -64,9 +76,6 @@ class Device extends GetView<Devicecontroller> {
                                 borderRadius: BorderRadius.circular(50),
                               ),
                             ),
-                            Text('Name $i'),
-                            Text('Dose $i'),
-                            Text('${i + 1}'),
                           ],
                         ),
                       ),
@@ -125,20 +134,26 @@ class Device extends GetView<Devicecontroller> {
             const SizedBox(
               height: 20,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Reminders'),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.add),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    // color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.blueAccent,
+                      // color: BrightnessMode.tertiary3,
+                    ),
                   ),
-                ],
-              ),
+                  child: const Text('Reminders'),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.add),
+                ),
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -157,6 +172,9 @@ class Device extends GetView<Devicecontroller> {
                     ),
                   );
                 }),
+            SizedBox(
+              height: Get.height * 0.05,
+            )
           ],
         ),
       ),
