@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:smart_dispencer/presentation/home/controllers/homecontroller.dart';
+import 'package:smart_dispencer/presentation/device/controllers/devicecontroller.dart';
+import 'package:smart_dispencer/presentation/device/views/device.dart';
+import 'package:smart_dispencer/presentation/home/controller/homecontroller.dart';
 import 'package:smart_dispencer/presentation/home/views/home.dart';
 
 class BottomappbarController extends GetxController {
@@ -16,10 +18,13 @@ class BottomappbarController extends GetxController {
         Get.lazyPut<HomeController>(() => HomeController());
         return const Home();
       case 1:
-        return Container();
+        Get.lazyPut<Devicecontroller>(() => Devicecontroller());
+        return const Device();
       case 2:
         return Container();
       case 3:
+        return Container();
+      case 4:
         return Container();
       default:
         return Container();

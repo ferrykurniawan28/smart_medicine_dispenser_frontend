@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 
-class HomeController extends GetxController {
+class Devicecontroller extends GetxController {
   StreamController<int> spinWheelController = StreamController<int>.broadcast();
   RxInt currentValue = 0.obs;
 

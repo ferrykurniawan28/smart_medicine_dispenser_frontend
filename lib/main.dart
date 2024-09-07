@@ -4,7 +4,8 @@ import 'package:smart_dispencer/application/bindings/splashbinding.dart';
 import 'package:smart_dispencer/routes/pages_name.dart';
 import 'package:smart_dispencer/routes/routes.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MainApp());
 }
 
