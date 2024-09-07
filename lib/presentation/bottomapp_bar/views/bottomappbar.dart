@@ -54,6 +54,7 @@ class Bottomappbar extends GetView<BottomappbarController> {
                       icon: Icons.notifications,
                       index: 3,
                       controller: controller,
+                      badgeCount: 1,
                     ),
                     buildIconButton(
                       icon: Icons.person,
