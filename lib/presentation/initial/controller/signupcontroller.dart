@@ -4,14 +4,16 @@ import 'package:smart_dispencer/data/models/api.dart';
 import 'package:smart_dispencer/data/services/authservice.dart';
 import 'package:smart_dispencer/routes/pages_name.dart';
 
-class SignInController extends GetxController {
+class SignUpController extends GetxController {
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  void signIn() async {
+  void signUp() async {
     if (formKey.currentState!.validate()) {
-      ApiResponse apiResponse = await login(
+      ApiResponse apiResponse = await register(
+        nameController.text,
         emailController.text,
         passwordController.text,
       );
@@ -19,8 +21,8 @@ class SignInController extends GetxController {
       if (apiResponse.error == null) {
         Get.offAllNamed(PagesName.home);
         Get.snackbar(
-          'Login Success',
-          'Welcome to Medicine Minder',
+          'Register  Success',
+          'Welcome to Minder',
         );
       } else {
         Get.snackbar(

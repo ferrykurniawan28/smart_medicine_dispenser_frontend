@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:smart_dispencer/presentation/colorpalette.dart';
 import 'package:smart_dispencer/routes/pages_name.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
@@ -37,13 +38,25 @@ class Auth extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'MINDER',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'MINDER',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const Icon(
+                    Icons.medication_sharp,
+                    color: Colors.white,
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 100,
@@ -96,18 +109,20 @@ class Auth extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () => Get.toNamed(PagesName.register),
-                // style: ElevatedButton.styleFrom(
-                //   textStyle: const TextStyle(
-                //     fontSize: 20,
-                //     color: Colors.white,
-                //   ),
-                //   backgroundColor: Colors.greenAccent,
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(10),
-                //   ),
-                // ),
+                style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                  ),
+                  backgroundColor: BrightnessMode.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 child: const Text(
                   'Sign Up',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ],
