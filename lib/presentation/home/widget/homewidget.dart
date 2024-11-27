@@ -1,8 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_dispencer/presentation/home/controller/homecontroller.dart';
 
-Widget greatings() {
+Widget greatings(HomeController controller) {
   DateTime now = DateTime.now();
   int hour = now.hour;
   String greats;
@@ -13,12 +15,34 @@ Widget greatings() {
   } else {
     greats = 'Good Evening';
   }
-  return Text(
-    greats,
-    style: const TextStyle(
-      fontSize: 30,
-      color: Colors.black,
-    ),
+  return Row(
+    children: [
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            greats,
+            style: const TextStyle(
+              fontSize: 30,
+              color: Colors.white,
+            ),
+          ),
+          GetBuilder<HomeController>(builder: (context) {
+            return Text(controller.user?.name ?? 'No user',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                ));
+          }),
+        ],
+      ),
+      const Spacer(),
+      Image.asset(
+        'assets/images/3d/doctor.png',
+        height: 70,
+      ),
+    ],
   );
 }
 
@@ -235,81 +259,62 @@ Widget motivation(int missed, int taken) {
   );
 }
 
-Widget nextDose() {
-  return Card(
-    child: Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        // color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+Widget reminderList(
+  String medicineName,
+  String medicineDose,
+  String time,
+  String date,
+) {
+  return Row(
+    children: [
+      Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: const Icon(Icons.medication),
       ),
-      child: Column(
+      const SizedBox(width: 10),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Next Dose',
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.black,
+          Text(
+            medicineName,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
           ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Column(
-                children: [
-                  const Text(
-                    'Name',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const Text(
-                    'Dose',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const Text(
-                    'Time',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  const Text(
-                    'Name',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const Text(
-                    'Dose',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const Text(
-                    'Time',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          Text(
+            medicineDose,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 14,
+            ),
           ),
         ],
       ),
-    ),
+      const Spacer(),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            time,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            date,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    ],
   );
 }

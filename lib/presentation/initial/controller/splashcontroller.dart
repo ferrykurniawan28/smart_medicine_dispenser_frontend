@@ -1,22 +1,40 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_dispencer/data/models/reminder.dart';
 import 'package:smart_dispencer/data/models/user.dart';
 import 'package:smart_dispencer/routes/pages_name.dart';
 
 class SplashController extends GetxController {
+  late final ProviderUser providerUser;
+  late final ProviderMedicineReminder providerMedicineReminder;
+
   @override
   void onInit() async {
-    final loggedIn = await isLoggedIn();
-    Future.delayed(const Duration(seconds: 3), () {
+    initializeApp();
+    super.onInit();
+  }
+
+  Future<void> initializeApp() async {
+    try {
+      providerUser = ProviderUser();
+      providerMedicineReminder = ProviderMedicineReminder();
+      await providerMedicineReminder.open(tableReminder);
+
+      final loggedIn = await isLoggedIn();
+
+      await Future.delayed(const Duration(seconds: 3));
+
       if (loggedIn) {
         Get.offNamed(PagesName.home);
       } else {
-        Get.offNamed(PagesName.login);
+        Get.offNamed(PagesName.auth);
       }
 
-      // destroy controller
+      // Destroy controller
       Get.delete<SplashController>();
-    });
-    super.onInit();
+    } catch (e) {
+      debugPrint("Error initializing app: $e");
+    }
   }
 
   // check if user is logged in
@@ -29,5 +47,10 @@ class SplashController extends GetxController {
     } else {
       return false;
     }
+  }
+
+  Future<void> initDatabase() async {
+    await providerUser.open(tableUser);
+    await providerMedicineReminder.open(tableReminder);
   }
 }

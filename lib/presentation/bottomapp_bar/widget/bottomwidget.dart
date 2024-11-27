@@ -16,7 +16,7 @@ Widget buildIconButton({
           controller.changeIndex(index);
         },
         color: controller.currentIndex.value == index
-            ? Colors.white
+            ? Colors.blueAccent
             : Colors.grey[00],
         splashColor: Colors.blueAccent,
       ),

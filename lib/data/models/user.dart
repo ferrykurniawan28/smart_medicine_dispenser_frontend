@@ -56,7 +56,7 @@ class User {
 class ProviderUser {
   late Database localdb;
 
-  Future open(String path) async {
+  Future<void> open(String path) async {
     localdb = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       await db.execute('''
@@ -73,23 +73,14 @@ class ProviderUser {
 
   // insert or update user
   Future<void> insertOrUpdate(User user) async {
+    await localdb.delete(tableUser);
+
     await localdb.insert(
       tableUser,
       user.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace, // Replaces existing record
     );
-    // if (user.id == 0) {
-    //   user.id = await localdb.insert(tableUser, user.toMap());
-    // } else {
-    //   await localdb.update(tableUser, user.toMap(),
-    //       where: '$columnId = ?', whereArgs: [user.id]);
-    // }
-    // return user;
   }
-  // Future<User> insert(User user) async {
-  //   user.id = await localdb.insert(tableUser, user.toMap());
-  //   return user;
-  // }
 
   Future<User?> getUser() async {
     List<Map<String, Object?>> maps = await localdb.query(
@@ -103,17 +94,6 @@ class ProviderUser {
     return null;
   }
 
-  // Future<User> getUser(int id) async {
-  //   List<Map<String, Object?>> maps = await localdb.query(tableUser,
-  //       columns: [columnId, columnName, columnRole, columnEmail, columnToken],
-  //       where: '$columnId = ?',
-  //       whereArgs: [id]);
-  //   if (maps.isNotEmpty) {
-  //     return User.fromMap(maps.first);
-  //   }
-  //   return User(id: 0, name: '', role: '', email: '');
-  // }
-
   Future<int> delete(int id) async {
     return await localdb
         .delete(tableUser, where: '$columnId = ?', whereArgs: [id]);
@@ -125,4 +105,8 @@ class ProviderUser {
   }
 
   Future close() async => localdb.close();
+
+  Future<void> reset() async {
+    await localdb.delete(tableUser);
+  }
 }

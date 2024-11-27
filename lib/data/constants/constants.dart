@@ -3,6 +3,9 @@ const baseUrl =
 const loginUrl = '$baseUrl/login';
 const registerUrl = '$baseUrl/register';
 
+const deviceUrl = '$baseUrl/device';
+const deviceUserUrl = '$baseUrl/device/user';
+
 const String serverError = 'Server Error';
 const String unauthorized = 'Unauthorized';
 const String somethingWentWrong = 'Something went wrong';

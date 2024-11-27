@@ -1,38 +1,13 @@
-Map<int, Map> dummyContainer = {
-  0: {
-    'medicine': 'Paracetamol',
-    'quantity': 10,
-  },
-  1: {
-    'medicine': 'Ibuprofen',
-    'quantity': 5,
-  },
-  2: {
-    'medicine': 'Vitamin C',
-    'quantity': 20,
-  },
-  3: {
-    'medicine': 'Vitamin D',
-    'quantity': 15,
-  },
-  4: {
-    'medicine': 'Zinc',
-    'quantity': 10,
-  },
-  5: {
-    'medicine': 'Multivitamin',
-    'quantity': 10,
-  },
-  6: {
-    'medicine': 'Cough Syrup',
-    'quantity': 5,
-  },
-  7: {
-    'medicine': 'Antibiotics',
-    'quantity': 5,
-  },
-  8: {
-    'medicine': 'Antihistamine',
-    'quantity': 5,
-  },
-};
+import 'package:smart_dispencer/data/models/container.dart';
+
+List<MedicineContainer> dummyContainer = [
+  MedicineContainer(id: 0, medicine: 'Paracetamol', quantity: 10),
+  MedicineContainer(id: 1, medicine: 'Ibuprofen', quantity: 5),
+  MedicineContainer(id: 2, medicine: 'Aspirin', quantity: 3),
+  MedicineContainer(id: 3, medicine: 'Vitamin C', quantity: 2),
+  MedicineContainer(id: 4, medicine: 'Vitamin D', quantity: 1),
+  MedicineContainer(id: 5, medicine: 'Vitamin E', quantity: 1),
+  MedicineContainer(id: 6, medicine: 'Vitamin B', quantity: 1),
+  MedicineContainer(id: 7, medicine: 'Vitamin A', quantity: 1),
+  MedicineContainer(id: 8, medicine: 'Vitamin K', quantity: 1),
+];

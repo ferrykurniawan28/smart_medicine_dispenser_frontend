@@ -1,23 +1,25 @@
+import 'dart:convert';
+
 import 'package:sqflite/sqflite.dart';
 
 const String tableReminder = 'medicineReminder';
 const String medicineReminderId = 'id';
-const String medicineReminderName = 'medicineName';
-const String medicineReminderDosageandTime = 'medicineDosageandTime';
+const String medicineReminderTime = 'medicineTime';
+const String medicineReminderDosage = 'medicineDosage';
 const String medicineReminderStartDate = 'medicineStartDate';
 const String medicineReminderEndDate = 'medicineEndDate';
 
 class MedicineReminder {
-  int id;
-  final List<String> medicineName;
-  final Map<String, List<String>> medicineDosageandTime;
-  final DateTime medicineStartDate;
-  final DateTime medicineEndDate;
+  int? id;
+  String medicineTime;
+  Map<String, int> medicineDosage;
+  DateTime medicineStartDate;
+  DateTime medicineEndDate;
 
   MedicineReminder({
-    required this.id,
-    required this.medicineName,
-    required this.medicineDosageandTime,
+    this.id,
+    required this.medicineTime,
+    required this.medicineDosage,
     required this.medicineStartDate,
     required this.medicineEndDate,
   });
@@ -25,29 +27,30 @@ class MedicineReminder {
   Map<String, Object?> toMap() {
     return {
       medicineReminderId: id,
-      medicineReminderName: medicineName,
-      medicineReminderDosageandTime: medicineDosageandTime,
-      medicineReminderStartDate: medicineStartDate,
-      medicineReminderEndDate: medicineEndDate,
+      medicineReminderTime: medicineTime,
+      medicineReminderDosage: jsonEncode(medicineDosage),
+      medicineReminderStartDate: medicineStartDate.toIso8601String(),
+      medicineReminderEndDate: medicineEndDate.toIso8601String(),
     };
   }
 
   factory MedicineReminder.fromMap(Map<String, Object?> map) {
     return MedicineReminder(
-      id: map[medicineReminderId] as int,
-      medicineName: map[medicineReminderName] as List<String>,
-      medicineDosageandTime:
-          map[medicineReminderDosageandTime] as Map<String, List<String>>,
-      medicineStartDate: map[medicineReminderStartDate] as DateTime,
-      medicineEndDate: map[medicineReminderEndDate] as DateTime,
+      id: map[medicineReminderId] as int?,
+      medicineTime: map[medicineReminderTime] as String,
+      medicineDosage:
+          jsonDecode(map[medicineReminderDosage] as String) as Map<String, int>,
+      medicineStartDate:
+          DateTime.parse(map[medicineReminderStartDate] as String),
+      medicineEndDate: DateTime.parse(map[medicineReminderEndDate] as String),
     );
   }
 
   factory MedicineReminder.fromJson(Map<String, dynamic> json) {
     return MedicineReminder(
       id: json['id'],
-      medicineName: json['medicineName'],
-      medicineDosageandTime: json['medicineDosage'],
+      medicineTime: json['medicineTime'],
+      medicineDosage: json['medicineDosage'],
       medicineStartDate: json['medicineStartDate'],
       medicineEndDate: json['medicineEndDate'],
     );
@@ -63,8 +66,8 @@ class ProviderMedicineReminder {
       await db.execute('''
           create table $tableReminder ( 
             $medicineReminderId integer primary key autoincrement, 
-            $medicineReminderName text not null,
-            $medicineReminderDosageandTime text not null,
+            $medicineReminderTime text not null,
+            $medicineReminderDosage text not null,
             $medicineReminderStartDate text not null,
             $medicineReminderEndDate text not null)
           ''');
@@ -72,16 +75,16 @@ class ProviderMedicineReminder {
   }
 
   Future<MedicineReminder> insert(MedicineReminder reminder) async {
-    reminder.id = await localdb.insert(tableReminder, reminder.toMap());
-    return reminder;
+    final id = await localdb.insert(tableReminder, reminder.toMap());
+    return reminder..id = id;
   }
 
   Future<MedicineReminder> getReminder(int id) async {
     List<Map<String, Object?>> maps = await localdb.query(tableReminder,
         columns: [
           medicineReminderId,
-          medicineReminderName,
-          medicineReminderDosageandTime,
+          medicineReminderTime,
+          medicineReminderDosage,
           medicineReminderStartDate,
           medicineReminderEndDate
         ],
@@ -107,14 +110,13 @@ class ProviderMedicineReminder {
   Future<List<MedicineReminder>> getAllReminders() async {
     List<Map<String, Object?>> maps = await localdb.query(tableReminder);
     return List.generate(maps.length, (i) {
-      return MedicineReminder(
-        id: maps[i][medicineReminderId] as int,
-        medicineName: maps[i][medicineReminderName] as List<String>,
-        medicineDosageandTime:
-            maps[i][medicineReminderDosageandTime] as Map<String, List<String>>,
-        medicineStartDate: maps[i][medicineReminderStartDate] as DateTime,
-        medicineEndDate: maps[i][medicineReminderEndDate] as DateTime,
-      );
+      return MedicineReminder.fromMap(maps[i]);
     });
+  }
+
+  Future close() async => localdb.close();
+
+  Future<void> reset() async {
+    await localdb.delete(tableReminder);
   }
 }

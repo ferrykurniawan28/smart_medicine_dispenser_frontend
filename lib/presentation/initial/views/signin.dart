@@ -28,7 +28,7 @@ class Signin extends GetView<SignInController> {
                   'Login',
                   style: TextStyle(
                     fontSize: 50,
-                    // color: Colors.white,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontFamily: GoogleFonts.lato().fontFamily,
                   ),
@@ -84,7 +84,7 @@ class Signin extends GetView<SignInController> {
                     ),
                   ),
                   child: const Text('Sign in',
-                      style: TextStyle(color: Colors.black)),
+                      style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),

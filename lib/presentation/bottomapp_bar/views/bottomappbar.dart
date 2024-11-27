@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_dispencer/presentation/bottomapp_bar/controllers/bottomappbar_controller.dart';
 import 'package:smart_dispencer/presentation/bottomapp_bar/widget/bottomwidget.dart';
-import 'package:smart_dispencer/presentation/colorpalette.dart';
 
 class Bottomappbar extends GetView<BottomappbarController> {
   const Bottomappbar({super.key});
@@ -22,7 +21,8 @@ class Bottomappbar extends GetView<BottomappbarController> {
               () => Container(
                 margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: BrightnessMode.primary,
+                  color: Colors.white,
+                  // color: BrightnessMode.primary,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [
                     BoxShadow(

@@ -33,6 +33,7 @@ class Signup extends GetView<SignUpController> {
                 Text(
                   'Register',
                   style: TextStyle(
+                    color: Colors.white,
                     fontSize: 50,
                     fontWeight: FontWeight.bold,
                     fontFamily: GoogleFonts.lato().fontFamily,
@@ -108,7 +109,7 @@ class Signup extends GetView<SignUpController> {
                     ),
                   ),
                   child: const Text('Sign up',
-                      style: TextStyle(color: Colors.black)),
+                      style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
