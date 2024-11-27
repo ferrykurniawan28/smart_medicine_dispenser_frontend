@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:smart_dispencer/presentation/colorpalette.dart';
 import 'package:smart_dispencer/routes/pages_name.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
@@ -38,10 +37,10 @@ class Auth extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'MINDER',
                     style: TextStyle(
                       fontSize: 30,
@@ -49,10 +48,10 @@ class Auth extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(
+                  SizedBox(
                     width: 10,
                   ),
-                  const Icon(
+                  Icon(
                     Icons.medication_sharp,
                     color: Colors.white,
                   ),

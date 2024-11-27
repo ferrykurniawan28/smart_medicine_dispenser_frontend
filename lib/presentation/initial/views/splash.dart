@@ -30,7 +30,7 @@ class Splash extends GetView<SplashController> {
                 height: 10,
               ),
               const Text(
-                'Smart Dispencer',
+                'MINDER',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

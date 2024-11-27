@@ -16,9 +16,6 @@ Future<ApiResponse> login(String email, String password) async {
       'password': password,
     });
 
-    print(response.body);
-    print(response.statusCode);
-
     switch (response.statusCode) {
       case 200:
         getToken(jsonDecode(response.body)['token']);
@@ -46,7 +43,6 @@ Future<ApiResponse> login(String email, String password) async {
     }
   } catch (e) {
     apiResponse.error = e.toString();
-    print(e);
   }
 
   return apiResponse;

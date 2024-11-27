@@ -1,58 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:smart_dispencer/presentation/calendar/controllers/calendarcontroller.dart';
+import 'package:smart_dispencer/presentation/calendar/widgets/constantwidget.dart';
+import 'package:smart_dispencer/presentation/calendar/widgets/floatbutton.dart';
+import 'package:smart_dispencer/presentation/calendar/widgets/reminderlist.dart';
+import 'package:smart_dispencer/presentation/calendar/widgets/tablecalendar.dart';
 import 'package:smart_dispencer/presentation/colorpalette.dart';
-import 'package:table_calendar/table_calendar.dart';
 
-class Calendar extends StatelessWidget {
+class Calendar extends GetView<CalendarController> {
   const Calendar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              BrightnessMode.primary,
-              BrightnessMode.secondary,
-            ],
-          ),
-        ),
-        child: ListView(
-          children: [
-            const Text(
-              'Calendar',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-              ),
+      body: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              color: BrightnessMode.primary,
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              // height: 200,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  TableCalendar(
-                    firstDay: DateTime.utc(2023, 1, 1),
-                    lastDay: DateTime.utc(2025, 12, 31),
-                    focusedDay: DateTime.now(),
+            child: ListView(
+              children: [
+                titleCalendar(),
+                const SizedBox(height: 10),
+                Container(
+                  // height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  const Divider(),
-                  const Text('Selected Day'), //TODO: integrate selected day
-                  const Divider(),
-                ],
-              ),
+                  child: Column(
+                    children: [
+                      MedicineCalendar(controller: controller),
+                      const Divider(),
+                      selectedDay(controller),
+                      const Divider(),
+                      const SizedBox(height: 10),
+                      ReminderList(controller: controller),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          FloatButtonCalendar(controller: controller),
+        ],
       ),
     );
   }
