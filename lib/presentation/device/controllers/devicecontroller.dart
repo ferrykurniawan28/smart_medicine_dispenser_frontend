@@ -30,6 +30,10 @@ class Devicecontroller extends GetxController {
     super.onInit();
   }
 
+  Future<void> onRefresh() async {
+    await initializeDevice();
+  }
+
   Future<void> initializeDevice() async {
     Devices? tempdevice;
     isLoading.value = true;

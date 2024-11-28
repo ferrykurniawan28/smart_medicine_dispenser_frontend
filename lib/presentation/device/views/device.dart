@@ -110,20 +110,23 @@ class Device extends GetView<Devicecontroller> {
     }
 
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: BrightnessMode.primary,
-        ),
-        child: GetBuilder(
-          init: controller,
-          builder: (_) {
-            return controller.isLoading.value
-                ? showLoading()
-                : (controller.device == null)
-                    ? showEmpty()
-                    : showDevice();
-          },
+      body: RefreshIndicator(
+        onRefresh: controller.onRefresh,
+        child: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: BrightnessMode.primary,
+          ),
+          child: GetBuilder(
+            init: controller,
+            builder: (_) {
+              return controller.isLoading.value
+                  ? showLoading()
+                  : (controller.device == null)
+                      ? showEmpty()
+                      : showDevice();
+            },
+          ),
         ),
       ),
     );
