@@ -94,9 +94,8 @@ class ProviderUser {
     return null;
   }
 
-  Future<int> delete(int id) async {
-    return await localdb
-        .delete(tableUser, where: '$columnId = ?', whereArgs: [id]);
+  Future<int> delete() async {
+    return await localdb.delete(tableUser);
   }
 
   Future<int> update(User user) async {

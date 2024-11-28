@@ -159,70 +159,70 @@ Widget barChart() {
   );
 }
 
-Widget userPerformance() {
-  return Card(
-    child: Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        // color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: const Column(
-        children: [
-          Text(
-            'Performance for the last 7 days',
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Column(
-                children: [
-                  const Text(
-                    'Missed',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.red,
-                    ),
-                  ),
-                  const Text(
-                    '2',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  const Text(
-                    'Taken',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.green,
-                    ),
-                  ),
-                  const Text(
-                    '8',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
-}
+// Widget userPerformance() {
+//   return Card(
+//     child: Container(
+//       padding: const EdgeInsets.all(20),
+//       decoration: BoxDecoration(
+//         // color: Colors.white,
+//         borderRadius: BorderRadius.circular(10),
+//       ),
+//       child: const Column(
+//         children: [
+//           Text(
+//             'Performance for the last 7 days',
+//             style: TextStyle(
+//               fontSize: 20,
+//               color: Colors.black,
+//             ),
+//           ),
+//           SizedBox(height: 20),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//             children: [
+//               Column(
+//                 children: [
+//                   const Text(
+//                     'Missed',
+//                     style: TextStyle(
+//                       fontSize: 20,
+//                       color: Colors.red,
+//                     ),
+//                   ),
+//                   const Text(
+//                     '2',
+//                     style: TextStyle(
+//                       fontSize: 20,
+//                       color: Colors.red,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//               Column(
+//                 children: [
+//                   const Text(
+//                     'Taken',
+//                     style: TextStyle(
+//                       fontSize: 20,
+//                       color: Colors.green,
+//                     ),
+//                   ),
+//                   const Text(
+//                     '8',
+//                     style: TextStyle(
+//                       fontSize: 20,
+//                       color: Colors.green,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
 
 Widget motivation(int missed, int taken) {
   // calculate the percentage

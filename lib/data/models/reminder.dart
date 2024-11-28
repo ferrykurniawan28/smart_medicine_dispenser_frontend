@@ -55,6 +55,14 @@ class MedicineReminder {
       medicineEndDate: json['medicineEndDate'],
     );
   }
+
+  static List<MedicineReminder> fromJsonList(List<dynamic> json) {
+    List<MedicineReminder> reminders = [];
+    for (var reminder in json) {
+      reminders.add(MedicineReminder.fromJson(reminder));
+    }
+    return reminders;
+  }
 }
 
 class ProviderMedicineReminder {
@@ -79,21 +87,20 @@ class ProviderMedicineReminder {
     return reminder..id = id;
   }
 
-  Future<MedicineReminder> getReminder(int id) async {
-    List<Map<String, Object?>> maps = await localdb.query(tableReminder,
-        columns: [
-          medicineReminderId,
-          medicineReminderTime,
-          medicineReminderDosage,
-          medicineReminderStartDate,
-          medicineReminderEndDate
-        ],
-        where: '$medicineReminderId = ?',
-        whereArgs: [id]);
+  Future<List<MedicineReminder>> getReminder() async {
+    List<Map<String, Object?>> maps =
+        await localdb.query(tableReminder, columns: [
+      medicineReminderId,
+      medicineReminderTime,
+      medicineReminderDosage,
+      medicineReminderStartDate,
+      medicineReminderEndDate
+    ]);
     if (maps.isNotEmpty) {
-      return MedicineReminder.fromMap(maps.first);
+      return MedicineReminder.fromJsonList(maps);
     } else {
-      throw Exception('ID $id not found');
+      return [];
+      // throw Exception('No reminder found');
     }
   }
 

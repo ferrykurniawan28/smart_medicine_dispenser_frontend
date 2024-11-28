@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_dispencer/data/models/device.dart';
 import 'package:smart_dispencer/data/models/reminder.dart';
 import 'package:smart_dispencer/data/models/user.dart';
 import 'package:smart_dispencer/routes/pages_name.dart';
@@ -7,6 +8,7 @@ import 'package:smart_dispencer/routes/pages_name.dart';
 class SplashController extends GetxController {
   late final ProviderUser providerUser;
   late final ProviderMedicineReminder providerMedicineReminder;
+  late final ProviderDevice providerDevice;
 
   @override
   void onInit() async {
@@ -51,6 +53,7 @@ class SplashController extends GetxController {
 
   Future<void> initDatabase() async {
     await providerUser.open(tableUser);
+    await providerDevice.open(tableDevices);
     await providerMedicineReminder.open(tableReminder);
   }
 }
