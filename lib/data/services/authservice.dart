@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_dispencer/data/constants/constants.dart';
 import 'package:smart_dispencer/data/models/api.dart';
 import 'package:http/http.dart' as http;
@@ -16,19 +15,21 @@ Future<ApiResponse> login(String email, String password) async {
       'password': password,
     });
 
+    // print(response.statusCode);
+    // print(response.body);
+
     switch (response.statusCode) {
       case 200:
-        getToken(jsonDecode(response.body)['token']);
-        saveUserId(jsonDecode(response.body)['user']['id']);
+        // getToken(jsonDecode(response.body)['token']);
+        // saveUserId(jsonDecode(response.body)['user']['id']);
         String token = jsonDecode(response.body)['token'];
         User newUser = User.fromJson(jsonDecode(response.body)['user']);
         newUser.token = token;
 
-        final providerUser = ProviderUser();
-        await providerUser.open(tableUser);
-        await providerUser.insertOrUpdate(newUser);
+        // final providerUser = ProviderUser();
+        // await providerUser.open(tableUser);
+        // await providerUser.insertOrUpdate(newUser);
         apiResponse.data = newUser;
-        // apiResponse.data = User.fromJson(jsonDecode(response.body)['user']);
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
@@ -59,8 +60,8 @@ Future<ApiResponse> loginWithId(int userId) async {
 
     switch (response.statusCode) {
       case 200:
-        getToken(jsonDecode(response.body)['token']);
-        saveUserId(jsonDecode(response.body)['user']['id']);
+        // getToken(jsonDecode(response.body)['token']);
+        // saveUserId(jsonDecode(response.body)['user']['id']);
         apiResponse.data = User.fromJson(jsonDecode(response.body)['user']);
         break;
       case 422:
@@ -95,8 +96,8 @@ Future<ApiResponse> register(String name, String email, String password) async {
 
     switch (response.statusCode) {
       case 200:
-        getToken(jsonDecode(response.body)['token']);
-        saveUserId(jsonDecode(response.body)['user']['id']);
+        // getToken(jsonDecode(response.body)['token']);
+        // saveUserId(jsonDecode(response.body)['user']['id']);
         String token = jsonDecode(response.body)['token'];
         User newUser = User.fromJson(jsonDecode(response.body)['user']);
         newUser.token = token;
@@ -125,14 +126,39 @@ Future<ApiResponse> register(String name, String email, String password) async {
   return apiResponse;
 }
 
-// get user token
-Future<String> getToken(String token) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString(token) ?? '';
+Future<ApiResponse> logout(User user) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    final response = await http.post(Uri.parse(logOutUrl), headers: {
+      "Authorization": "Bearer ${user.token}",
+    });
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = 'success';
+        break;
+      case 403:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+    }
+  } catch (e) {
+    apiResponse.error = e.toString();
+  }
+
+  return apiResponse;
 }
 
-// save user id
-Future<void> saveUserId(int userId) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('userId', userId);
-}
+// // get user token
+// Future<String> getToken(String token) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   return prefs.getString(token) ?? '';
+// }
+
+// // save user id
+// Future<void> saveUserId(int userId) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   prefs.setInt('userId', userId);
+// }

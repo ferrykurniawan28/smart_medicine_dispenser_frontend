@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_dispencer/data/models/api.dart';
+import 'package:smart_dispencer/data/models/user.dart';
 import 'package:smart_dispencer/data/services/authservice.dart';
 import 'package:smart_dispencer/routes/pages_name.dart';
 
@@ -17,6 +18,10 @@ class SignInController extends GetxController {
       );
 
       if (apiResponse.error == null) {
+        final providerUser = ProviderUser();
+        await providerUser.open(tableUser);
+        await providerUser.insertOrUpdate(apiResponse.data as User);
+
         Get.offAllNamed(PagesName.home);
         Get.snackbar(
           'Login Success',

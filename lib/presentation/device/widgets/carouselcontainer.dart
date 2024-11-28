@@ -27,8 +27,8 @@ class CarouselContainer extends StatelessWidget {
                 onTap: () => controller.settingContainer(index),
                 width: 300,
                 id: index,
-                medicine: controller.containers[index].medicine,
-                quantity: controller.containers[index].quantity,
+                medicine: controller.containers[index].medicine ?? '',
+                quantity: controller.containers[index].quantity ?? 0,
               );
             },
             options: CarouselOptions(

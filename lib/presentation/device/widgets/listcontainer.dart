@@ -29,8 +29,9 @@ class ListContainer extends StatelessWidget {
                   ),
                 ),
                 subtitle: Text(
-                    (_.containers[index].medicine.isNotEmpty)
-                        ? controller.containers[index].medicine
+                    (_.containers[index].medicine != null &&
+                            _.containers[index].medicine!.isNotEmpty)
+                        ? controller.containers[index].medicine!
                         : 'Empty',
                     style: const TextStyle(
                       color: Colors.black,

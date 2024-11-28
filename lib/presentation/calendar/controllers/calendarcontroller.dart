@@ -7,6 +7,7 @@ import 'package:smart_dispencer/data/models/reminder.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarController extends GetxController {
+  late ProviderMedicineReminder providerMedicineReminder;
   Rx<DateTime> focusedDay = DateTime.now().obs;
   Rx<CalendarFormat> calendarFormat = Rx<CalendarFormat>(CalendarFormat.month);
   Rx<DateTime?> selectedDay = Rx<DateTime?>(null);
@@ -14,17 +15,23 @@ class CalendarController extends GetxController {
   RxMap<DateTime, List<MedicineReminder>> events = RxMap();
   List<MedicineContainer> containers = [];
   RxBool isEditing = false.obs;
-  ProviderMedicineReminder providerMedicineReminder =
-      ProviderMedicineReminder();
 
   List<MedicineReminder> reminders = [];
 
   @override
   void onInit() {
+    initializeReminder();
     containers = dummyContainer;
     selectedEvents = ValueNotifier<List<MedicineReminder>>([]);
     _loadEvents();
     super.onInit();
+  }
+
+  Future<void> initializeReminder() async {
+    providerMedicineReminder = ProviderMedicineReminder();
+    await providerMedicineReminder.open(tableReminder);
+    reminders = await providerMedicineReminder.getReminder();
+    _loadEvents();
   }
 
   void onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -196,7 +203,7 @@ class CalendarController extends GetxController {
                             for (var i = 0; i < containers.length; i++)
                               ListTile(
                                 title: Text(
-                                  containers[i].medicine,
+                                  containers[i].medicine ?? '',
                                   style: const TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -275,14 +282,14 @@ class CalendarController extends GetxController {
                                     if (medicineList[i])
                                       ListTile(
                                         title: Text(
-                                          containers[i].medicine,
+                                          containers[i].medicine ?? '',
                                           style: const TextStyle(
                                               overflow: TextOverflow.ellipsis),
                                         ),
                                         onTap: () {
                                           // Toggle medicine selection for this time
                                           String medicine =
-                                              containers[i].medicine;
+                                              containers[i].medicine ?? '';
                                           if (timeMedicineMap[time]!
                                               .containsKey(medicine)) {
                                             timeMedicineMap[time]!
@@ -294,7 +301,7 @@ class CalendarController extends GetxController {
                                         },
                                         trailing: Obx(() {
                                           String medicine =
-                                              containers[i].medicine;
+                                              containers[i].medicine ?? '';
                                           // Ensure the map exists
                                           timeMedicineMap[time] ??= {};
                                           // Ensure the medicine entry exists
@@ -503,7 +510,7 @@ class CalendarController extends GetxController {
                             for (var i = 0; i < containers.length; i++)
                               ListTile(
                                 title: Text(
-                                  containers[i].medicine,
+                                  containers[i].medicine ?? '',
                                   style: const TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                   ),

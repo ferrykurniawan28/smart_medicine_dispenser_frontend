@@ -69,8 +69,10 @@ class Home extends GetView<HomeController> {
                     GetBuilder<HomeController>(
                       builder: (_) {
                         if (controller.reminders.isEmpty) {
-                          return const Center(
-                            child: Text('No reminder for today'),
+                          return const Expanded(
+                            child: Center(
+                              child: Text('No reminder for today'),
+                            ),
                           );
                         }
                         return Container(

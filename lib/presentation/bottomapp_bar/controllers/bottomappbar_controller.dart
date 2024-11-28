@@ -12,6 +12,14 @@ import 'package:smart_dispencer/presentation/profile/view/profile.dart';
 class BottomappbarController extends GetxController {
   var currentIndex = 0.obs;
 
+  @override
+  void onInit() {
+    Get.put(HomeController());
+    Get.put(Devicecontroller());
+    Get.put(CalendarController());
+    super.onInit();
+  }
+
   void changeIndex(int index) {
     currentIndex.value = index;
   }
@@ -19,13 +27,10 @@ class BottomappbarController extends GetxController {
   Widget get currentPage {
     switch (currentIndex.value) {
       case 0:
-        Get.lazyPut<HomeController>(() => HomeController());
         return const Home();
       case 1:
-        Get.put(Devicecontroller());
         return const Device();
       case 2:
-        Get.lazyPut(() => CalendarController());
         return const Calendar();
       case 3:
         return const Notifications();

@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:smart_dispencer/presentation/dashboard/controllers/dashboardcontroller.dart';
 
 class Dashboard extends GetView<Dashboardcontroller> {
@@ -107,7 +106,7 @@ class Dashboard extends GetView<Dashboardcontroller> {
                                 Text('100'),
                               ],
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -140,7 +139,7 @@ class Dashboard extends GetView<Dashboardcontroller> {
                                 Text('100'),
                               ],
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -172,7 +171,7 @@ class Dashboard extends GetView<Dashboardcontroller> {
                     ),
                     IconButton(
                       onPressed: () {},
-                      icon: Icon(Icons.add),
+                      icon: const Icon(Icons.add),
                     ),
                   ],
                 ),

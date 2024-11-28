@@ -10,22 +10,19 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+    initializeApp();
     reminders = CalendarController().getNextReminders(5);
-    getUser();
     super.onInit();
+  }
+
+  Future<void> initializeApp() async {
+    await providerUser.open(tableUser);
+    user = await providerUser.getUser();
+    update();
   }
 
   Future<void> refreshHome() async {
     reminders = CalendarController().getNextReminders(5);
-    print(reminders.length);
-    print(reminders);
     update();
-  }
-
-  void getUser() async {
-    await providerUser.open(tableUser);
-    user = await providerUser.getUser();
-    update();
-    print(user?.name);
   }
 }
