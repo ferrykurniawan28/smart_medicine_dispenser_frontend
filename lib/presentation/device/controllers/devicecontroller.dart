@@ -25,8 +25,9 @@ class Devicecontroller extends GetxController {
   );
 
   @override
-  void onInit() {
-    initializeDevice();
+  void onInit() async {
+    // await initializeDevice();
+    // print("Device Id: ${device?.id}");
     super.onInit();
   }
 
@@ -78,22 +79,13 @@ class Devicecontroller extends GetxController {
     isLoading.value = false;
   }
 
-  void spinRight() {
-    carouselKey.currentState!.carouselController.nextPage();
-    // carouselController.nextPage();
-    if (currentValue.value < containers.length - 1) {
-      currentValue.value += 1;
+  void updateCurrentIndex(int index) async {
+    ApiResponse response = await updateDeviceState(index, device!.id!);
+    if (response.error != null) {
+      Get.snackbar('Error', response.error!);
     } else {
-      currentValue.value = 0;
-    }
-  }
-
-  void spinLeft() {
-    carouselController.previousPage();
-    if (currentValue.value > 0) {
-      currentValue.value -= 1;
-    } else {
-      currentValue.value = containers.length - 1;
+      currentValue.value = index;
+      // update();
     }
   }
 
@@ -147,6 +139,7 @@ class Devicecontroller extends GetxController {
       Get.snackbar('Error', apiResponse.error!);
     } else {
       containers[index] = apiResponse.data as MedicineContainer;
+      providerMedicineContainer.update(apiResponse.data as MedicineContainer);
       update();
     }
     Get.back();

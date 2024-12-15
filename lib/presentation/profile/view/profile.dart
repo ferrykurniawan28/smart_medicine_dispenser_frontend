@@ -17,52 +17,48 @@ class Profile extends StatelessWidget {
     return Scaffold(
       body: Container(
         color: BrightnessMode.secondary,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Center(
-              child: Text('Profile'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final ProviderDevice providerDevice = ProviderDevice();
-                final ProviderMedicineContainer providerMedicineContainer =
-                    ProviderMedicineContainer();
-                await providerDevice.open(tableDevices);
-                await providerMedicineContainer.open(tableContainer);
-                await providerDevice.reset();
-                await providerMedicineContainer.reset();
-                await providerDevice.close();
-                await providerMedicineContainer.close();
-              },
-              child: const Text("Reset database"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                // Get.find<HomeController>().user;
-                ApiResponse apiResponse = ApiResponse();
-                apiResponse = await logout(Get.find<HomeController>().user!);
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircleAvatar(
+                radius: 50,
+              ),
+              Text(
+                Get.find<HomeController>().user?.name ?? '',
+                style: const TextStyle(fontSize: 20),
+              ),
+              Text(
+                Get.find<HomeController>().user?.email ?? '',
+                style: const TextStyle(fontSize: 20),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  // Get.find<HomeController>().user;
+                  ApiResponse apiResponse = ApiResponse();
+                  apiResponse = await logout(Get.find<HomeController>().user!);
 
-                if (apiResponse.error == null) {
-                  final providerUser = ProviderUser();
-                  final deviceProvider = ProviderDevice();
-                  final containerProvider = ProviderMedicineContainer();
-                  await providerUser.open(tableUser);
-                  await deviceProvider.open(tableDevices);
-                  await containerProvider.open(tableContainer);
-                  await providerUser.delete();
-                  await deviceProvider.reset();
-                  await containerProvider.reset();
-                  await deviceProvider.close();
-                  await containerProvider.close();
-                  Get.offAllNamed(PagesName.auth);
-                } else {
-                  Get.snackbar('Error', apiResponse.error.toString());
-                }
-              },
-              child: const Text('Logout'),
-            )
-          ],
+                  if (apiResponse.error == null) {
+                    final providerUser = ProviderUser();
+                    final deviceProvider = ProviderDevice();
+                    final containerProvider = ProviderMedicineContainer();
+                    await providerUser.open(tableUser);
+                    await deviceProvider.open(tableDevices);
+                    await containerProvider.open(tableContainer);
+                    await providerUser.delete();
+                    await deviceProvider.reset();
+                    await containerProvider.reset();
+                    await deviceProvider.close();
+                    await containerProvider.close();
+                    Get.offAllNamed(PagesName.auth);
+                  } else {
+                    Get.snackbar('Error', apiResponse.error.toString());
+                  }
+                },
+                child: const Text('Logout'),
+              )
+            ],
+          ),
         ),
       ),
     );

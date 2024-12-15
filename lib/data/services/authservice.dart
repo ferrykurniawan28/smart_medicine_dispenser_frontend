@@ -20,15 +20,10 @@ Future<ApiResponse> login(String email, String password) async {
 
     switch (response.statusCode) {
       case 200:
-        // getToken(jsonDecode(response.body)['token']);
-        // saveUserId(jsonDecode(response.body)['user']['id']);
         String token = jsonDecode(response.body)['token'];
         User newUser = User.fromJson(jsonDecode(response.body)['user']);
         newUser.token = token;
 
-        // final providerUser = ProviderUser();
-        // await providerUser.open(tableUser);
-        // await providerUser.insertOrUpdate(newUser);
         apiResponse.data = newUser;
         break;
       case 422:
@@ -60,8 +55,6 @@ Future<ApiResponse> loginWithId(int userId) async {
 
     switch (response.statusCode) {
       case 200:
-        // getToken(jsonDecode(response.body)['token']);
-        // saveUserId(jsonDecode(response.body)['user']['id']);
         apiResponse.data = User.fromJson(jsonDecode(response.body)['user']);
         break;
       case 422:
@@ -151,14 +144,30 @@ Future<ApiResponse> logout(User user) async {
   return apiResponse;
 }
 
-// // get user token
-// Future<String> getToken(String token) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   return prefs.getString(token) ?? '';
-// }
+// store user fcm token
+Future<ApiResponse> storeUserFcmToken(User user, String fcmToken) async {
+  ApiResponse apiResponse = ApiResponse();
 
-// // save user id
-// Future<void> saveUserId(int userId) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   prefs.setInt('userId', userId);
-// }
+  try {
+    final response = await http.post(Uri.parse(userFcmTokenUrl), headers: {
+      "Authorization": "Bearer ${user.token}",
+    }, body: {
+      'fcm_token': fcmToken,
+    });
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = 'success';
+        break;
+      case 403:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+    }
+  } catch (e) {
+    apiResponse.error = e.toString();
+  }
+
+  return apiResponse;
+}

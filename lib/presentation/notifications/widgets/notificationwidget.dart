@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 Widget notificationCard({
-  required String title,
-  required String subtitle,
+  required String message,
   required String time,
 }) {
   return Card(
@@ -13,12 +12,13 @@ Widget notificationCard({
         size: 40,
       ),
       title: Text(
-        title,
+        message,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
+        overflow: TextOverflow.clip,
       ),
-      subtitle: Text(subtitle),
+      // subtitle: Text(subtitle),
       trailing: Text(time),
     ),
   );

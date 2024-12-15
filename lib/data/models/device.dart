@@ -15,7 +15,7 @@ class Devices {
   final String uid;
   int currentState = 0;
   String? status;
-  int? temperature;
+  double? temperature;
   List<MedicineContainer>? containers;
 
   Devices({
@@ -35,7 +35,7 @@ class Devices {
       uid: json['uid'],
       currentState: json['current_state'],
       status: json['status'],
-      temperature: json['temperature'] as int?,
+      temperature: json['temperature'] as double?,
       containers: MedicineContainer.fromJsonList(json['device_content']),
     );
   }
@@ -57,7 +57,7 @@ class Devices {
       userId: map[columnUserId] as int,
       uid: map[columnUid] as String,
       currentState: map[columnCurrentState] as int,
-      temperature: map[columnTemperature] as int?,
+      temperature: map[columnTemperature] as double?,
       status: map[columnStatus] as String?,
     );
   }

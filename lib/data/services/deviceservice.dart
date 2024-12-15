@@ -64,7 +64,7 @@ Future<ApiResponse> registerDevice(String uid, int userId) async {
   return apiResponse;
 }
 
-Future<ApiResponse> getDeviceTemperature(String deviceId) async {
+Future<ApiResponse> fetchDeviceTemperature(String deviceId) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
@@ -103,7 +103,36 @@ Future<ApiResponse> updateDeviceTemperature(
 
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)['temperature'];
+        apiResponse.data = jsonDecode(response.body)['device'];
+        break;
+      case 403:
+        apiResponse.error = unauthorized;
+        break;
+      case 404:
+        apiResponse.error = 'Device not found';
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+    }
+  } catch (e) {
+    apiResponse.error = e.toString();
+  }
+
+  return apiResponse;
+}
+
+Future<ApiResponse> updateDeviceState(int state, int deviceId) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+    final response =
+        await http.post(Uri.parse('$deviceStateUrl/$deviceId'), body: {
+      'current_state': state.toString(),
+    });
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['device'];
         break;
       case 403:
         apiResponse.error = unauthorized;

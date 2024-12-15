@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_dispencer/data/dummy/container.dart';
+import 'package:smart_dispencer/data/models/api.dart';
 import 'package:smart_dispencer/data/models/container.dart';
 import 'package:smart_dispencer/data/models/reminder.dart';
+import 'package:smart_dispencer/data/services/reminderservice.dart';
+import 'package:smart_dispencer/presentation/device/controllers/devicecontroller.dart';
+import 'package:smart_dispencer/presentation/home/controller/homecontroller.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarController extends GetxController {
@@ -15,43 +18,99 @@ class CalendarController extends GetxController {
   RxMap<DateTime, List<MedicineReminder>> events = RxMap();
   List<MedicineContainer> containers = [];
   RxBool isEditing = false.obs;
+  RxBool isLoading = false.obs;
 
   List<MedicineReminder> reminders = [];
 
   @override
-  void onInit() {
-    initializeReminder();
-    containers = dummyContainer;
+  void onInit() async {
+    await initializeReminder();
     selectedEvents = ValueNotifier<List<MedicineReminder>>([]);
-    _loadEvents();
+    // _loadEvents();
     super.onInit();
   }
 
   Future<void> initializeReminder() async {
+    isLoading.value = true;
+    List<MedicineReminder>? tempReminders;
     providerMedicineReminder = ProviderMedicineReminder();
     await providerMedicineReminder.open(tableReminder);
-    reminders = await providerMedicineReminder.getReminder();
+    // tempReminders = await providerMedicineReminder.getReminder();
+
+    if (Get.find<Devicecontroller>().device != null) {
+      ApiResponse apiResponse = ApiResponse();
+      apiResponse =
+          await fetchReminder(Get.find<Devicecontroller>().device!.id!);
+
+      if (apiResponse.error != null &&
+          apiResponse.error != 'Reminder not found') {
+        Get.snackbar('Error', apiResponse.error!);
+      } else {
+        // print("Reminder : ${apiResponse.data}");
+        if (apiResponse.data != null) {
+          for (var reminder in apiResponse.data as List<MedicineReminder>) {
+            await providerMedicineReminder.insert(reminder);
+            reminders.add(reminder);
+          }
+          // tempReminders = await providerMedicineReminder.getReminder();
+        }
+      }
+    } else {
+      // reminders = tempReminders;
+    }
+
     _loadEvents();
+    get5reminders();
+
+    // Get.find<HomeController().setReminders(reminders);
+
+    isLoading.value = false;
+  }
+
+  void get5reminders() async {
+    ApiResponse response =
+        await fetchNextReminder(Get.find<Devicecontroller>().device!.id!);
+
+    if (response.error != null) {
+      Get.snackbar('Error', response.error!);
+    } else {
+      Get.find<HomeController>()
+          .setReminders(response.data as List<MedicineReminder>);
+      // update();
+    }
   }
 
   void onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    this.selectedDay.value = selectedDay;
+    DateTime normalizedDay =
+        DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
+
+    this.selectedDay.value = normalizedDay;
     this.focusedDay.value = focusedDay;
 
-    // Update selected events for the selected day
-    selectedEvents.value = events[selectedDay] ?? [];
+    selectedEvents.value = events[normalizedDay] ?? [];
+    update();
   }
 
   void onFormatChanged(CalendarFormat format) {
     calendarFormat.value = format;
   }
 
+  // TODO: integrate local database
   void _loadEvents() {
     events.clear();
+
     for (var reminder in reminders) {
-      DateTime current = reminder.medicineStartDate;
-      while (current.isBefore(reminder.medicineEndDate) ||
-          current.isAtSameMomentAs(reminder.medicineEndDate)) {
+      // Parse the start and end dates
+      DateTime startDate = reminder.medicineStartDate;
+      DateTime endDate = reminder.medicineEndDate;
+
+      // Reset time to 00:00:00
+      startDate = DateTime(startDate.year, startDate.month, startDate.day);
+      // endDate = DateTime(endDate.year, endDate.month, endDate.day);
+
+      // Iterate through the dates
+      DateTime current = startDate;
+      while (current.isBefore(endDate) || current.isAtSameMomentAs(endDate)) {
         if (!events.containsKey(current)) {
           events[current] = [];
         }
@@ -59,13 +118,19 @@ class CalendarController extends GetxController {
         current = current.add(const Duration(days: 1));
       }
     }
+
     if (selectedDay.value != null) {
       selectedEvents.value = events[selectedDay.value!] ?? [];
     }
+
+    update();
   }
 
   List<MedicineReminder> getEventsForDay(DateTime day) {
-    List<MedicineReminder> dayEvents = events[day] ?? [];
+    // Normalize day to 00:00:00
+    DateTime normalizedDay = DateTime(day.year, day.month, day.day);
+
+    List<MedicineReminder> dayEvents = events[normalizedDay] ?? [];
 
     dayEvents.sort((a, b) {
       TimeOfDay timeA = _parseTime(a.medicineTime);
@@ -132,11 +197,13 @@ class CalendarController extends GetxController {
         current = current.add(const Duration(days: 1));
       }
     }
+    print(nextReminders);
 
     return nextReminders;
   }
 
   void openDialog() {
+    containers = Get.find<Devicecontroller>().containers;
     RxList<bool> medicineList = RxList<bool>.filled(containers.length, false);
 
     RxMap<String, Map<String, int>> timeMedicineMap =
@@ -145,7 +212,7 @@ class CalendarController extends GetxController {
     DateTime startDate = selectedDay.value ?? focusedDay.value;
     DateTime? endDate;
 
-    void addReminder() {
+    void addReminder() async {
       if (endDate == null) {
         Get.snackbar('Error', 'Please select an end date',
             snackPosition: SnackPosition.BOTTOM);
@@ -162,18 +229,25 @@ class CalendarController extends GetxController {
 
       for (var time in timeMedicineMap.keys) {
         MedicineReminder newReminder = MedicineReminder(
+          deviceId: Get.find<Devicecontroller>().device!.id!,
           medicineTime: time,
           medicineDosage: timeMedicineMap[time]!,
           medicineStartDate: startDate,
           medicineEndDate: endDate!,
         );
-        providerMedicineReminder.insert(newReminder);
-        reminders.add(newReminder);
+        ApiResponse apiResponse = await postReminder(newReminder);
+
+        if (apiResponse.error != null) {
+          Get.snackbar('Error', apiResponse.error!);
+          return;
+        } else {
+          reminders.add(apiResponse.data as MedicineReminder);
+          providerMedicineReminder.insert(apiResponse.data as MedicineReminder);
+        }
       }
       selectedEvents.value = reminders;
 
       _loadEvents();
-      // update();
       Get.back();
     }
 
@@ -468,6 +542,7 @@ class CalendarController extends GetxController {
   }
 
   void editDialog(MedicineReminder reminder) {
+    containers = Get.find<Devicecontroller>().containers;
     DateTime startDate = reminder.medicineStartDate;
     DateTime endDate = reminder.medicineEndDate;
 
@@ -485,6 +560,58 @@ class CalendarController extends GetxController {
         }
       }
     }
+
+    void updateReminder() async {
+      if (medicineDosage.isEmpty) {
+        Get.snackbar('Error', 'Please add a time for the medicine',
+            snackPosition: SnackPosition.BOTTOM);
+        return;
+      } else if (medicineList.every((element) => element == false)) {
+        Get.snackbar('Error', 'Please select a medicine',
+            snackPosition: SnackPosition.BOTTOM);
+        return;
+      }
+
+      MedicineReminder newReminder = MedicineReminder(
+        id: reminder.id,
+        deviceId: Get.find<Devicecontroller>().device!.id!,
+        medicineTime: medicineTime,
+        medicineDosage: medicineDosage,
+        medicineStartDate: startDate,
+        medicineEndDate: endDate,
+      );
+
+      ApiResponse apiResponse = await postReminder(newReminder);
+
+      if (apiResponse.error != null) {
+        Get.snackbar('Error', apiResponse.error!);
+        return;
+      } else {
+        reminders.remove(reminder);
+        reminders.add(apiResponse.data as MedicineReminder);
+        providerMedicineReminder.insert(apiResponse.data as MedicineReminder);
+      }
+
+      _loadEvents();
+      Get.back();
+    }
+
+    void deleteReminder() async {
+      ApiResponse apiResponse = await destroyReminder(reminder.id!);
+
+      if (apiResponse.error != null) {
+        Get.snackbar('Error', apiResponse.error!);
+        return;
+      } else {
+        reminders.remove(reminder);
+        providerMedicineReminder.delete(reminder.id!);
+      }
+
+      _loadEvents();
+      Get.back();
+      Get.back();
+    }
+
     Get.bottomSheet(
       Stack(
         clipBehavior: Clip.none,
@@ -678,29 +805,7 @@ class CalendarController extends GetxController {
                   );
                 }),
                 ElevatedButton(
-                  onPressed: () {
-                    if (medicineDosage.isEmpty) {
-                      Get.snackbar(
-                          'Error', 'Please add a time for the medicine',
-                          snackPosition: SnackPosition.BOTTOM);
-                      return;
-                    } else if (medicineList
-                        .every((element) => element == false)) {
-                      Get.snackbar('Error', 'Please select a medicine',
-                          snackPosition: SnackPosition.BOTTOM);
-                      return;
-                    }
-
-                    reminder.medicineTime = medicineTime;
-                    reminder.medicineDosage = medicineDosage;
-                    reminder.medicineStartDate = startDate;
-                    reminder.medicineEndDate = endDate;
-
-                    selectedEvents.value = reminders;
-
-                    _loadEvents();
-                    Get.back();
-                  },
+                  onPressed: updateReminder,
                   child: const Text('Save Reminder'),
                 ),
               ],
@@ -740,12 +845,7 @@ class CalendarController extends GetxController {
                   middleText: 'Are you sure you want to delete this reminder?',
                   textConfirm: 'Delete',
                   textCancel: 'Cancel',
-                  onConfirm: () {
-                    reminders.remove(reminder);
-                    selectedEvents.value = reminders;
-                    _loadEvents();
-                    Get.back();
-                  },
+                  onConfirm: deleteReminder,
                 );
               },
               child: const Text("Delete Reminder"),

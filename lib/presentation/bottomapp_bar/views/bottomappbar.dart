@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smart_dispencer/presentation/bottomapp_bar/controllers/bottomappbar_controller.dart';
 import 'package:smart_dispencer/presentation/bottomapp_bar/widget/bottomwidget.dart';
+import 'package:smart_dispencer/presentation/notifications/controllers/notificationcontroller.dart';
 
 class Bottomappbar extends GetView<BottomappbarController> {
   const Bottomappbar({super.key});
@@ -27,7 +28,8 @@ class Bottomappbar extends GetView<BottomappbarController> {
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
-                      blurRadius: 10,
+                      offset: Offset(-10, 20),
+                      blurRadius: 20,
                     ),
                   ],
                 ),
@@ -43,7 +45,6 @@ class Bottomappbar extends GetView<BottomappbarController> {
                       icon: Icons.devices,
                       index: 1,
                       controller: controller,
-                      badgeCount: 2,
                     ),
                     buildIconButton(
                       icon: Icons.calendar_month,
@@ -54,7 +55,13 @@ class Bottomappbar extends GetView<BottomappbarController> {
                       icon: Icons.notifications,
                       index: 3,
                       controller: controller,
-                      badgeCount: 1,
+                      badgeCount: Get.find<NotificationController>()
+                              .notifications
+                              .isNotEmpty
+                          ? Get.find<NotificationController>()
+                              .notifications
+                              .length
+                          : 0,
                     ),
                     buildIconButton(
                       icon: Icons.person,

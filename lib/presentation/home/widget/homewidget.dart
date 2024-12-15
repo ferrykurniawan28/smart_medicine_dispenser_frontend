@@ -263,7 +263,6 @@ Widget reminderList(
   String medicineName,
   String medicineDose,
   String time,
-  String date,
 ) {
   return Row(
     children: [
@@ -304,13 +303,6 @@ Widget reminderList(
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
-            ),
-          ),
-          Text(
-            date,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 14,
             ),
           ),
         ],

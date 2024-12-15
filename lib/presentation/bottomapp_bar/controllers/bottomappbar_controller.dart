@@ -6,6 +6,7 @@ import 'package:smart_dispencer/presentation/device/controllers/devicecontroller
 import 'package:smart_dispencer/presentation/device/views/device.dart';
 import 'package:smart_dispencer/presentation/home/controller/homecontroller.dart';
 import 'package:smart_dispencer/presentation/home/views/home.dart';
+import 'package:smart_dispencer/presentation/notifications/controllers/notificationcontroller.dart';
 import 'package:smart_dispencer/presentation/notifications/views/notifications.dart';
 import 'package:smart_dispencer/presentation/profile/view/profile.dart';
 
@@ -13,11 +14,17 @@ class BottomappbarController extends GetxController {
   var currentIndex = 0.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
+    initialize();
+    super.onInit();
+  }
+
+  void initialize() async {
     Get.put(HomeController());
     Get.put(Devicecontroller());
+    await Get.find<Devicecontroller>().initializeDevice();
     Get.put(CalendarController());
-    super.onInit();
+    Get.put(NotificationController());
   }
 
   void changeIndex(int index) {

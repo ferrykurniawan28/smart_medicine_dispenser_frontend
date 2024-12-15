@@ -1,8 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_dispencer/data/models/api.dart';
 import 'package:smart_dispencer/data/models/device.dart';
 import 'package:smart_dispencer/data/models/reminder.dart';
 import 'package:smart_dispencer/data/models/user.dart';
+import 'package:smart_dispencer/data/services/authservice.dart';
 import 'package:smart_dispencer/routes/pages_name.dart';
 
 class SplashController extends GetxController {
@@ -27,7 +30,17 @@ class SplashController extends GetxController {
       await Future.delayed(const Duration(seconds: 3));
 
       if (loggedIn) {
-        Get.offNamed(PagesName.home);
+        await providerUser.open(tableUser);
+        final user = await providerUser.getUser();
+
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        ApiResponse response = await storeUserFcmToken(user!, fcmToken!);
+
+        if (response.error == null) {
+          Get.offNamed(PagesName.home);
+        } else {
+          Get.offNamed(PagesName.auth);
+        }
       } else {
         Get.offNamed(PagesName.auth);
       }

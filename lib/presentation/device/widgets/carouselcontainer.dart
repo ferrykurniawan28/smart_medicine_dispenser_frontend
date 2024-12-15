@@ -45,7 +45,7 @@ class CarouselContainer extends StatelessWidget {
               enlargeCenterPage: true,
               scrollDirection: Axis.horizontal,
               onPageChanged: (index, reason) {
-                controller.currentValue.value = index;
+                controller.updateCurrentIndex(index);
               },
             ),
           ),

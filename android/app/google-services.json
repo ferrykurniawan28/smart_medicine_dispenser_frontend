@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "145042075292",
+    "project_id": "minder-3b9ba",
+    "storage_bucket": "minder-3b9ba.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145042075292:android:3977a5a9393b8032c0c759",
+        "android_client_info": {
+          "package_name": "com.example.smart_dispencer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANqa_U4IgTSZB6ThEcpC7qCyLH9Qvftes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

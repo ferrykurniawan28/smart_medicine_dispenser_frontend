@@ -13,37 +13,38 @@ class MedicineCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => TableCalendar(
-          firstDay: DateTime.now().subtract(const Duration(days: 365 * 2)),
-          lastDay: DateTime.now().add(const Duration(days: 365 * 2)),
-          focusedDay: controller.focusedDay.value, // Make it reactive
-          calendarFormat: controller.calendarFormat.value,
-          startingDayOfWeek: StartingDayOfWeek.monday,
-          headerVisible: true,
-          headerStyle: const HeaderStyle(
-            formatButtonVisible: false,
-            titleCentered: true,
-          ),
-          calendarStyle: const CalendarStyle(
-            todayDecoration: BoxDecoration(
-              color: Colors.blue,
-              shape: BoxShape.circle,
-            ),
-            selectedDecoration: BoxDecoration(
-              color: Colors.green,
-              shape: BoxShape.circle,
-            ),
-          ),
-          selectedDayPredicate: (day) =>
-              isSameDay(controller.selectedDay.value, day),
-          onDaySelected: controller.onDaySelected,
-          onFormatChanged: (format) {
-            controller.calendarFormat.value = format;
-          },
-          onPageChanged: (focusedDay) {
-            controller.focusedDay.value = focusedDay;
-          },
-          eventLoader: controller.getEventsForDay,
-        ));
+    return GetBuilder(
+        builder: (CalendarController controller) => TableCalendar(
+              firstDay: DateTime.now().subtract(const Duration(days: 365 * 2)),
+              lastDay: DateTime.now().add(const Duration(days: 365 * 2)),
+              focusedDay: controller.focusedDay.value,
+              calendarFormat: controller.calendarFormat.value,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              headerVisible: true,
+              headerStyle: const HeaderStyle(
+                formatButtonVisible: false,
+                titleCentered: true,
+              ),
+              calendarStyle: const CalendarStyle(
+                todayDecoration: BoxDecoration(
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              selectedDayPredicate: (day) =>
+                  isSameDay(controller.selectedDay.value, day),
+              onDaySelected: controller.onDaySelected,
+              onFormatChanged: (format) {
+                controller.calendarFormat.value = format;
+              },
+              onPageChanged: (focusedDay) {
+                controller.focusedDay.value = focusedDay;
+              },
+              eventLoader: controller.getEventsForDay,
+            ));
   }
 }
